@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Draw</title>
+<style>
+  :root {
+    --bg: #4d3838;
+    --fg: #ffffff;
+    --dim: #8c7373;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: fixed;
+    left: clamp(40px, 6vw, 96px);
+    top: clamp(80px, 14vh, 180px);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-size: clamp(22px, 1.9vw, 30px);
+    line-height: 1.1;
+    z-index: 5;
+  }
+  nav a {
+    color: var(--dim);
+    text-decoration: none;
+    transition: color .15s ease;
+    width: max-content;
+    outline: none;
+  }
+  nav a:hover { color: #3732B5; }
+  nav a.is-current { color: var(--fg); }
+  [contenteditable="true"]:focus {
+    outline: 1px dashed rgba(255,255,255,0.25);
+    outline-offset: 6px;
+    border-radius: 2px;
+  }
+
+  /* ---------- stage ---------- */
+  .stage {
+    --slide-w: clamp(340px, 34vw, 620px);
+    --gap: clamp(80px, 10vw, 180px);
+    --active-x: calc(50vw - var(--slide-w) / 2);
+    --slide-top: 50%;
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .track {
+    position: absolute;
+    top: var(--slide-top);
+    left: 0;
+    display: flex;
+    gap: var(--gap);
+    align-items: center;
+    transform: translate(
+      calc(var(--active-x) - calc(var(--active, 0) * calc(var(--slide-w) + var(--gap)))),
+      -50%
+    );
+    transition: transform .7s cubic-bezier(.5, 0, .2, 1);
+  }
+
+  .slide {
+    flex: 0 0 auto;
+    width: var(--slide-w);
+    margin: 0;
+    opacity: 0.32;
+    transition: opacity .6s cubic-bezier(.5, 0, .2, 1);
+  }
+  .slide[data-active="true"] { opacity: 1; }
+
+  /* image slides */
+  .frame {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: rgba(255,255,255,0.04);
+  }
+  .frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .frame.placeholder {
+    display: grid;
+    place-items: center;
+    background:
+      repeating-linear-gradient(135deg,
+        rgba(255,255,255,0.06) 0 1px,
+        transparent 1px 14px),
+      rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.42);
+    font-family: ui-monospace, "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  figcaption {
+    margin-top: clamp(20px, 2.4vw, 36px);
+    border-top: 1px solid var(--fg);
+    padding-top: clamp(10px, 1.2vw, 18px);
+    font-size: clamp(15px, 1.1vw, 18px);
+    color: var(--fg);
+    min-height: 1.4em;
+  }
+  figcaption [contenteditable] { display: inline-block; min-width: 1em; }
+
+  /* text slide */
+  .copy-slide {
+    color: var(--fg);
+    font-size: clamp(14px, 1.1vw, 17px);
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+  .copy-slide p + p { margin-top: 1.2em; }
+
+  /* ---------- arrows ---------- */
+  .arrow {
+    position: absolute;
+    top: var(--slide-top);
+    transform: translate(-50%, -50%);
+    width: clamp(28px, 2.4vw, 40px);
+    height: clamp(60px, 5.2vw, 84px);
+    color: var(--fg);
+    display: grid;
+    place-items: center;
+    z-index: 4;
+    text-decoration: none;
+    transition: opacity .25s ease, transform .2s ease, color .15s ease;
+  }
+  .arrow svg { width: 100%; height: 100%; }
+  .arrow[data-disabled="true"] {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .next-arrow { left: calc(var(--active-x) + var(--slide-w) + var(--gap) / 2); }
+  .next-arrow:hover { transform: translate(calc(-50% + 4px), -50%); }
+  .prev-arrow {
+    left: calc(var(--active-x) - var(--gap) / 2);
+    transform: translate(-50%, -50%) scaleX(-1);
+  }
+  .prev-arrow:hover { transform: translate(calc(-50% - 4px), -50%) scaleX(-1); }
+
+  @media (max-width: 880px) {
+    .stage { --slide-w: 78vw; --gap: 22vw; }
+    nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+      top: 28px;
+      left: 28px;
+      right: 28px;
+      gap: 14px 22px;
+      font-size: 18px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <nav data-screen-label="Draw · Menu">
+    <a href="index.html">Home</a>
+    <a href="paper.html">Paper</a>
+    <a href="about.html">About</a>
+    <a href="draw.html" class="is-current">Draw</a>
+    <a href="shop.html">Shop</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <main class="stage" data-screen-label="Draw · Slideshow">
+    <div class="track" style="--active: 0;">
+
+      <article class="slide copy-slide" contenteditable="true" spellcheck="false">
+        <p>Drawing never gets old. I draw when I&rsquo;m sad. I draw at bars and restaurants. I draw when I&rsquo;m on the phone. I draw when I&rsquo;m in meetings. I draw when I should be going to bed. I draw because I can&rsquo;t help myself. Or maybe drawing is helping myself. Drawing helps me get out of self. It helps me process, express, and explore emotion. The best drawings happen after I&rsquo;ve stopped caring about the outcome, after I&rsquo;m tired of drawing.</p>
+        <p>This collection of drawings explores themes around money, obsession, vanity, fear, and people.</p>
+        <p>For inquiries, contact: <a href="mailto:studio@joshlary.com" style="color:inherit;">studio@joshlary.com</a></p>
+      </article>
+
+      <figure class="slide">
+        <div class="frame">
+          <img src="assets/draw_04_scribbles.jpeg" alt="" />
+        </div>
+        <figcaption>
+          <span contenteditable="true" spellcheck="false">More, 2024 · crayon on paper</span>
+        </figcaption>
+      </figure>
+
+      <figure class="slide">
+        <div class="frame">
+          <img src="assets/draw_will.jpeg" alt="" />
+        </div>
+        <figcaption>
+          <span contenteditable="true" spellcheck="false">My Will, Your Will, God&rsquo;s Will, 2025 · graphite on paper</span>
+        </figcaption>
+      </figure>
+
+      <figure class="slide">
+        <div class="frame">
+          <img src="assets/draw_portrait.jpeg" alt="" />
+        </div>
+        <figcaption>
+          <span contenteditable="true" spellcheck="false">Untitled Portrait, 2024 · graphite on paper</span>
+        </figcaption>
+      </figure>
+
+      <figure class="slide">
+        <div class="frame">
+          <img src="assets/draw_financial.jpeg" alt="" />
+        </div>
+        <figcaption>
+          <span contenteditable="true" spellcheck="false">Financial Fantasy, 2024 · crayon on paper</span>
+        </figcaption>
+      </figure>
+
+      <figure class="slide">
+        <div class="frame">
+          <img src="assets/draw_portrait_2.jpeg" alt="" />
+        </div>
+        <figcaption>
+          <span contenteditable="true" spellcheck="false">Untitled Portrait, 2024 · graphite on paper</span>
+        </figcaption>
+      </figure>
+
+      <figure class="slide">
+        <div class="frame">
+          <img src="assets/draw_portrait_3.jpeg" alt="" />
+        </div>
+        <figcaption>
+          <span contenteditable="true" spellcheck="false">Untitled Portrait, 2024 · graphite on paper</span>
+        </figcaption>
+      </figure>
+
+      <figure class="slide">
+        <div class="frame">
+          <img src="assets/draw_portrait_4.jpeg" alt="" />
+        </div>
+        <figcaption>
+          <span contenteditable="true" spellcheck="false">Untitled Portrait, 2024 · graphite on paper</span>
+        </figcaption>
+      </figure>
+
+    </div>
+
+    <a class="arrow prev-arrow" href="#" aria-label="Previous">
+      <svg viewBox="0 0 24 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="4 4 20 24 4 44"></polyline>
+      </svg>
+    </a>
+
+    <a class="arrow next-arrow" href="#" aria-label="Next">
+      <svg viewBox="0 0 24 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="4 4 20 24 4 44"></polyline>
+      </svg>
+    </a>
+  </main>
+
+  <script>
+    // ---- unified slideshow (text + images) ----
+    const track = document.querySelector('.track');
+    const slides = document.querySelectorAll('.slide');
+    const next = document.querySelector('.next-arrow');
+    const prev = document.querySelector('.prev-arrow');
+    let active = 0;
+    function update() {
+      track.style.setProperty('--active', active);
+      slides.forEach((s, i) => s.setAttribute('data-active', i === active ? 'true' : 'false'));
+      next.setAttribute('data-disabled', active >= slides.length - 1 ? 'true' : 'false');
+      prev.setAttribute('data-disabled', active <= 0 ? 'true' : 'false');
+    }
+    next.addEventListener('click', e => {
+      e.preventDefault();
+      if (active < slides.length - 1) { active++; update(); }
+    });
+    prev.addEventListener('click', e => {
+      e.preventDefault();
+      if (active > 0) { active--; update(); }
+    });
+    document.addEventListener('keydown', e => {
+      if (e.target.matches('[contenteditable]')) return;
+      if (e.key === 'ArrowRight' && active < slides.length - 1) { active++; update(); }
+      if (e.key === 'ArrowLeft'  && active > 0)                  { active--; update(); }
+    });
+    update();
+
+    // ---- menu: click navigates, double-click edits ----
+    document.querySelectorAll('nav a').forEach(a => {
+      a.addEventListener('dblclick', e => {
+        e.preventDefault();
+        a.setAttribute('contenteditable', 'true');
+        a.focus();
+        const range = document.createRange();
+        range.selectNodeContents(a);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      });
+      a.addEventListener('blur', () => a.removeAttribute('contenteditable'));
+      a.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === 'Escape') {
+          e.preventDefault();
+          a.blur();
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
