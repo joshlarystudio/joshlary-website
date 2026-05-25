@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Josh Lary</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #4d3838;
+  }
+  body {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+  }
+  a.mark-link {
+    display: block;
+    line-height: 0;
+    outline: none;
+  }
+  .mark {
+    display: block;
+    width: 900px;
+    max-width: 92vw;
+    height: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+    transition: opacity .15s ease;
+  }
+  a.mark-link:hover .mark { opacity: 0.92; }
+</style>
+</head>
+<body>
+  <a class="mark-link" href="paper.html" aria-label="Paper">
+    <img class="mark" src="assets/mark-brown.png" alt="Josh Lary" />
+  </a>
+</body>
+</html>

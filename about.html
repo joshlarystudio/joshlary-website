@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>About — Josh Lary</title>
+<style>
+  :root {
+    --bg: #4d3838;
+    --fg: #ffffff;
+    --dim: #8c7373;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: fixed;
+    left: clamp(40px, 6vw, 96px);
+    top: clamp(80px, 14vh, 180px);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-size: clamp(22px, 1.9vw, 30px);
+    line-height: 1.1;
+    z-index: 5;
+  }
+  nav a {
+    color: var(--dim);
+    text-decoration: none;
+    transition: color .15s ease;
+    width: max-content;
+    outline: none;
+  }
+  nav a:hover { color: #3732B5; }
+  nav a.is-current { color: var(--fg); }
+
+  /* ---------- stage ---------- */
+  .stage {
+    --slide-w: clamp(340px, 34vw, 620px);
+    position: relative;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .copy-slide {
+    width: var(--slide-w);
+    color: var(--fg);
+    font-size: clamp(14px, 1.1vw, 17px);
+    line-height: 1.5;
+  }
+  .copy-slide p + p { margin-top: 1.2em; }
+  .copy-slide .pull {
+    font-style: italic;
+    color: rgba(255,255,255,0.92);
+  }
+
+  @media (max-width: 880px) {
+    .stage { --slide-w: 78vw; padding-top: 120px; align-items: start; }
+    nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+      top: 28px;
+      left: 28px;
+      right: 28px;
+      gap: 14px 22px;
+      font-size: 18px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="paper.html">Paper</a>
+    <a href="about.html" class="is-current">About</a>
+    <a href="draw.html">Draw</a>
+    <a href="shop.html">Shop</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <main class="stage">
+    <article class="copy-slide">
+      <p>Josh Lary is an artist based in Los Angeles, CA, with a BFA from Ringling College of Art &amp; Design. His work is deeply influenced by his journey in sobriety and introspection into actions, behaviors, and thought patterns.</p>
+      <p class="pull">He says, &ldquo;The selfish behavior I used to cope with life was the wallpaper to much deeper issues. I create art to help inspire change, new perspectives, and deeper self-analysis.&rdquo;</p>
+      <p>Josh&rsquo;s work is home to many personal commissions and has been displayed in several galleries across Los Angeles, San Francisco, Stockholm, and Sarasota.</p>
+    </article>
+  </main>
+
+</body>
+</html>
