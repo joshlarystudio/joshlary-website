@@ -39,7 +39,8 @@
     width: max-content;
     outline: none;
   }
-  nav a:hover { color: #3732B5; }
+  nav a:hover { color: #C17777; }
+  nav a:visited { color: var(--dim); }
   nav a.is-current { color: var(--fg); }
 
   /* ---------- stage ---------- */
@@ -74,7 +75,8 @@
     width: max-content;
     transition: color .15s ease, border-color .15s ease;
   }
-  .email-link:hover { color: #3732B5; border-color: #3732B5; }
+  .email-link:hover { color: #C17777; border-color: #C17777; }
+  .email-link:visited { color: var(--fg); border-color: rgba(255,255,255,0.35); }
 
   .newsletter-row {
     display: flex;
@@ -116,8 +118,8 @@
     background: rgba(255,255,255,0);
     transition: background .15s ease;
   }
-  .subscribe:hover { color: #3732B5; }
-  .subscribe:hover::after { background: #3732B5; }
+  .subscribe:hover { color: #C17777; }
+  .subscribe:hover::after { background: #C17777; }
   .subscribe[data-sent="true"] {
     color: var(--dim);
     pointer-events: none;
