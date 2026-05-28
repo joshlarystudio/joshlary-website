@@ -154,7 +154,12 @@
   .prev-arrow:hover { transform: translate(calc(-50% - 4px), -50%) scaleX(-1); }
 
   @media (max-width: 880px) {
-    .stage { --slide-w: 78vw; --gap: 22vw; }
+    .stage { --slide-w: 78vw; --gap: 14vw; }
+    .arrow {
+      width: 44px;
+      height: 72px;
+      min-width: 44px;
+    }
     nav {
       flex-direction: row;
       flex-wrap: wrap;
