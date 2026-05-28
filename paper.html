@@ -126,6 +126,48 @@
   .copy-slide p + p { margin-top: 1.2em; }
   .copy-slide a { color: inherit; }
 
+  /* ---------- grid toggle ---------- */
+  .grid-btn {
+    position: absolute;
+    bottom: clamp(36px, 5vh, 64px);
+    left: var(--active-x);
+    z-index: 6;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(255,255,255,0.45);
+    padding: 6px;
+    transition: color .15s ease;
+  }
+  .grid-btn:hover { color: var(--fg); }
+  .grid-btn svg { width: 22px; height: 22px; display: block; }
+
+  /* grid view */
+  .stage[data-view="grid"] {
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .stage[data-view="grid"] .track {
+    position: static;
+    transform: none !important;
+    transition: none;
+    flex-shrink: 0;
+    padding-left: calc(clamp(40px, 6vw, 96px) + 140px);
+    padding-right: clamp(40px, 6vw, 96px);
+    align-items: flex-start;
+  }
+  .stage[data-view="grid"] .slide { opacity: 1; }
+  .stage[data-view="grid"] .copy-slide { display: none; }
+  .stage[data-view="grid"] .arrow { display: none; }
+  .stage[data-view="grid"] .grid-btn {
+    position: fixed;
+    bottom: clamp(36px, 5vh, 64px);
+    left: clamp(40px, 6vw, 96px);
+    color: var(--fg);
+  }
+
   /* ---------- arrows ---------- */
   .arrow {
     position: absolute;
@@ -234,6 +276,15 @@
 
     </div>
 
+    <button class="grid-btn" aria-label="Toggle grid view">
+      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <rect x="1" y="1" width="7.5" height="7.5" rx="0.5"/>
+        <rect x="11.5" y="1" width="7.5" height="7.5" rx="0.5"/>
+        <rect x="1" y="11.5" width="7.5" height="7.5" rx="0.5"/>
+        <rect x="11.5" y="11.5" width="7.5" height="7.5" rx="0.5"/>
+      </svg>
+    </button>
+
     <a class="arrow prev-arrow" href="#" aria-label="Previous">
       <svg viewBox="0 0 24 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <polyline points="4 4 20 24 4 44"></polyline>
@@ -272,6 +323,23 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'ArrowRight' && active < slides.length - 1) { active++; update(); }
       if (e.key === 'ArrowLeft'  && active > 0)                  { active--; update(); }
+    });
+
+    const stage = document.querySelector('.stage');
+    const gridBtn = document.querySelector('.grid-btn');
+    gridBtn.addEventListener('click', () => {
+      const isGrid = stage.dataset.view === 'grid';
+      stage.dataset.view = isGrid ? '' : 'grid';
+      if (isGrid) update();
+    });
+    document.querySelectorAll('.slide:not(.copy-slide)').forEach((slide, i) => {
+      slide.style.cursor = 'pointer';
+      slide.addEventListener('click', () => {
+        if (stage.dataset.view !== 'grid') return;
+        stage.dataset.view = '';
+        active = i + 1; // +1 to account for copy-slide
+        update();
+      });
     });
 
     let touchStartX = 0;
