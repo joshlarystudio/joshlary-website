@@ -129,15 +129,13 @@
 
   /* ---------- grid toggle ---------- */
   .grid-btn {
-    position: absolute;
-    top: calc(var(--slide-top) + var(--slide-w) * 2 / 3 - 60px);
-    left: var(--active-x);
-    z-index: 6;
+    display: block;
+    margin-top: 1.8em;
     background: none;
     border: none;
     cursor: pointer;
     color: rgba(255,255,255,0.45);
-    padding: 6px;
+    padding: 0;
     transition: color .15s ease;
   }
   .grid-btn:hover { color: var(--fg); }
@@ -233,6 +231,14 @@
         <p>These patterns mark a time in my life where I was incapable of changing my behavior and life became a pattern of bad decisions followed by even worse consequences.</p>
         <p>This series highlights my behavioral patterns (old and new), showing which have begun to change and which I&rsquo;ve continued to struggle with since getting sober.</p>
         <p>For inquiries, contact: <a href="mailto:studio@joshlary.com">studio@joshlary.com</a></p>
+        <button class="grid-btn" aria-label="Toggle grid view">
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <rect x="1" y="1" width="7.5" height="7.5" rx="0.5"/>
+            <rect x="11.5" y="1" width="7.5" height="7.5" rx="0.5"/>
+            <rect x="1" y="11.5" width="7.5" height="7.5" rx="0.5"/>
+            <rect x="11.5" y="11.5" width="7.5" height="7.5" rx="0.5"/>
+          </svg>
+        </button>
       </article>
 
       <figure class="slide">
@@ -263,15 +269,6 @@
       </figure>
 
     </div>
-
-    <button class="grid-btn" aria-label="Toggle grid view">
-      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <rect x="1" y="1" width="7.5" height="7.5" rx="0.5"/>
-        <rect x="11.5" y="1" width="7.5" height="7.5" rx="0.5"/>
-        <rect x="1" y="11.5" width="7.5" height="7.5" rx="0.5"/>
-        <rect x="11.5" y="11.5" width="7.5" height="7.5" rx="0.5"/>
-      </svg>
-    </button>
 
     <a class="arrow prev-arrow" href="#" aria-label="Previous">
       <svg viewBox="0 0 24 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
