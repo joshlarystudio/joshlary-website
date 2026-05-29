@@ -143,8 +143,6 @@
   .grid-btn:hover { color: var(--fg); }
   .grid-btn svg { width: 30px; height: 30px; display: block; }
 
-  body.grid-open { overflow-y: auto; }
-
   /* grid view */
   .stage[data-view="grid"] {
     overflow: visible;
@@ -343,19 +341,30 @@
 
     const stage = document.querySelector('.stage');
     const gridBtn = document.querySelector('.grid-btn');
+    function openGrid() {
+      stage.dataset.view = 'grid';
+      document.documentElement.style.height = 'auto';
+      document.documentElement.style.overflowY = 'auto';
+      document.body.style.height = 'auto';
+      document.body.style.overflowY = 'auto';
+    }
+    function closeGrid() {
+      stage.dataset.view = '';
+      document.documentElement.style.height = '';
+      document.documentElement.style.overflowY = '';
+      document.body.style.height = '';
+      document.body.style.overflowY = '';
+      window.scrollTo(0, 0);
+    }
     gridBtn.addEventListener('click', () => {
-      const isGrid = stage.dataset.view === 'grid';
-      stage.dataset.view = isGrid ? '' : 'grid';
-      document.body.classList.toggle('grid-open', !isGrid);
-      if (isGrid) { window.scrollTo(0, 0); update(); }
+      if (stage.dataset.view === 'grid') { closeGrid(); update(); }
+      else openGrid();
     });
     document.querySelectorAll('.slide:not(.copy-slide)').forEach((slide, i) => {
       slide.style.cursor = 'pointer';
       slide.addEventListener('click', () => {
         if (stage.dataset.view !== 'grid') return;
-        stage.dataset.view = '';
-        document.body.classList.remove('grid-open');
-        window.scrollTo(0, 0);
+        closeGrid();
         active = i + 1;
         update();
       });
