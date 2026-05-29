@@ -165,6 +165,7 @@
   .stage[data-view="grid"] .copy-slide { display: none; }
   .stage[data-view="grid"] .arrow { display: none; }
   .stage[data-view="grid"] .grid-btn { display: none; }
+  .stage[data-view="grid"] figcaption { display: none; }
 
   /* ---------- arrows ---------- */
   .arrow {
@@ -209,6 +210,10 @@
       right: 28px;
       gap: 14px 22px;
       font-size: 18px;
+    }
+    .stage[data-view="grid"] .track {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 110px 12px 40px 12px;
     }
   }
 </style>
