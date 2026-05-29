@@ -144,21 +144,23 @@
 
   /* grid view */
   .stage[data-view="grid"] {
-    overflow-x: auto;
-    overflow-y: hidden;
-    display: flex;
-    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
   .stage[data-view="grid"] .track {
     position: static;
     transform: none !important;
     transition: none;
-    flex-shrink: 0;
-    padding-left: calc(clamp(40px, 6vw, 96px) + 140px);
-    padding-right: clamp(40px, 6vw, 96px);
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(16px, 2vw, 28px);
+    padding: clamp(24px, 3vh, 48px) clamp(24px, 3vw, 48px);
+    padding-left: calc(clamp(40px, 6vw, 96px) + 160px);
+    align-items: start;
+    height: auto;
+    min-height: 100vh;
   }
-  .stage[data-view="grid"] .slide { opacity: 1; }
+  .stage[data-view="grid"] .slide { opacity: 1; width: auto; }
   .stage[data-view="grid"] .copy-slide { display: none; }
   .stage[data-view="grid"] .arrow { display: none; }
   .stage[data-view="grid"] .grid-btn {
