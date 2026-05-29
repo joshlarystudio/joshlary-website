@@ -141,10 +141,12 @@
   .grid-btn:hover { color: var(--fg); }
   .grid-btn svg { width: 30px; height: 30px; display: block; }
 
+  body.grid-open { overflow-y: auto; }
+
   /* grid view */
   .stage[data-view="grid"] {
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: visible;
+    height: auto;
   }
   .stage[data-view="grid"] .track {
     position: static;
@@ -321,13 +323,16 @@
     gridBtn.addEventListener('click', () => {
       const isGrid = stage.dataset.view === 'grid';
       stage.dataset.view = isGrid ? '' : 'grid';
-      if (isGrid) update();
+      document.body.classList.toggle('grid-open', !isGrid);
+      if (isGrid) { window.scrollTo(0, 0); update(); }
     });
     document.querySelectorAll('.slide:not(.copy-slide)').forEach((slide, i) => {
       slide.style.cursor = 'pointer';
       slide.addEventListener('click', () => {
         if (stage.dataset.view !== 'grid') return;
         stage.dataset.view = '';
+        document.body.classList.remove('grid-open');
+        window.scrollTo(0, 0);
         active = i + 1; // +1 to account for copy-slide
         update();
       });
@@ -336,6 +341,7 @@
     let touchStartX = 0;
     document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
     document.addEventListener('touchend', e => {
+      if (stage.dataset.view === 'grid') return;
       const dx = e.changedTouches[0].clientX - touchStartX;
       if (Math.abs(dx) < 40) return;
       if (dx < 0 && active < slides.length - 1) { active++; update(); }
