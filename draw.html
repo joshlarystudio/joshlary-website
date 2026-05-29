@@ -129,7 +129,7 @@
   /* ---------- grid toggle ---------- */
   .grid-btn {
     position: absolute;
-    bottom: clamp(36px, 5vh, 64px);
+    top: calc(var(--slide-top) + var(--slide-w) * 2 / 3 + 16px);
     left: var(--active-x);
     z-index: 6;
     background: none;
@@ -140,7 +140,7 @@
     transition: color .15s ease;
   }
   .grid-btn:hover { color: var(--fg); }
-  .grid-btn svg { width: 22px; height: 22px; display: block; }
+  .grid-btn svg { width: 30px; height: 30px; display: block; }
 
   /* grid view */
   .stage[data-view="grid"] {
@@ -163,6 +163,7 @@
   .stage[data-view="grid"] .arrow { display: none; }
   .stage[data-view="grid"] .grid-btn {
     position: fixed;
+    top: auto;
     bottom: clamp(36px, 5vh, 64px);
     left: clamp(40px, 6vw, 96px);
     color: var(--fg);
