@@ -298,6 +298,7 @@
       slides.forEach((s, i) => s.setAttribute('data-active', i === active ? 'true' : 'false'));
       next.setAttribute('data-disabled', active >= slides.length - 1 ? 'true' : 'false');
       prev.setAttribute('data-disabled', active <= 0 ? 'true' : 'false');
+      gridBtn.style.display = active === 0 ? '' : 'none';
     }
 
     next.addEventListener('click', e => {
